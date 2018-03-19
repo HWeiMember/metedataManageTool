@@ -13,7 +13,7 @@ import java.util.Random;
  */
 public class GenerateData {
 	private static final int MAX_NODE_NUMBER = 30;
-	private static final int K = 3;
+	private static final int K = 4;
 
 	private String[] x1 = new String[MAX_NODE_NUMBER];
 	private String[] y1 = new String[MAX_NODE_NUMBER];
@@ -49,7 +49,7 @@ public class GenerateData {
 			fWriter.close();
 
 		}
-		System.out.println("数据生成结束！");
+		//System.out.println("数据生成结束！");
 	}
 
 	public void generateRandomPosition() {

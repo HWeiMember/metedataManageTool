@@ -16,11 +16,22 @@ public class Partition {
 	//private static final int K = 5;
 	private Map<Integer,K_Centers> kCenters = new HashMap<>();
 	private Map<Integer,Nodes> nodes = new HashMap<>();
-    private Map<Integer, List<Nodes>> cluster =new HashMap<>();
+    private Map<Integer, Map<Integer,Nodes>> cluster =new HashMap<>();
     
 //	String path1 = "./dataset/points.txt";
 //	String path2 = "./dataset/kcenters.txt";
 	
+	public Map<Integer, K_Centers> getkCenters() {
+		return kCenters;
+	}
+
+	public Map<Integer, Nodes> getNodes() {
+		return nodes;
+	}
+
+	public Map<Integer, Map<Integer, Nodes>> getCluster() {
+		return cluster;
+	}
 	
 
 	// add nodes set;
@@ -39,7 +50,7 @@ public class Partition {
 			while ((line = br.readLine()) != null) {
 				//System.out.println(line);
 				str = line.split("\t");
-				//System.out.println(str[0]+" ,"+str[1]+" ,"+str[2]);
+
 				x = Double.valueOf(str[0]);
 				y = Double.valueOf(str[1]);
 				z = Double.valueOf(str[2]);
@@ -60,6 +71,7 @@ public class Partition {
 			br.close();
 		}
 	}
+
 
 	// calculate the distance;
 	private double getDistance(Points node, Points kcenter) {
@@ -95,25 +107,29 @@ public class Partition {
 		
 	}
 	//partition using k-centers for all nodes;
-	public Map<Integer, List<Nodes>> cluster(){
+	public Map<Integer, Map<Integer,Nodes>> cluster(){
 		int k = kCenters.size();
 		double[] distanceToCenter =new double[k];
 		
-		Integer key=null;
+		Integer kkey=null;
 		Nodes value=null;
+		
+		Integer nodeKey = null;
+		
 		System.out.println("nodes "+nodes.size());
 		for(int i=0;i < nodes.size();i++){
 			for(int j=0;j< k;j++){
 				distanceToCenter[j] = getDistance(nodes.get(Integer.valueOf(i)), kCenters.get(Integer.valueOf(j)));
 			}
-			key = findMinDistanceNode(distanceToCenter);
+			kkey = findMinDistanceNode(distanceToCenter);
 			value = nodes.get(Integer.valueOf(i));
 			
-			if(!cluster.containsKey(key)){
-				List<Nodes> list = new ArrayList<>();
-				cluster.put(key, list);
+			if(!cluster.containsKey(kkey)){
+				Map<Integer,Nodes> map = new HashMap<>();
+				cluster.put(kkey, map);
 			}
-			cluster.get(key).add(value);			
+			nodeKey = Integer.valueOf(i);
+			cluster.get(kkey).put(nodeKey, value);			
 		}
 		
 		return cluster;	
